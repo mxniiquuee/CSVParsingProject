@@ -1,0 +1,113 @@
+
+import edu.duke.*;
+import org.apache.commons.csv.*;
+
+public class WhichCountriesExport {
+    public void listExporters(CSVParser parser, String exportOfInterest) {
+        //for each row in CSV File
+        for (CSVRecord record : parser) {
+            //look at the "Exports" column
+            String export = record.get("Exports");
+            //check if it contains exportOfInterest
+            if (export.contains(exportOfInterest)) {
+                //If so, write down the "Country" from that row
+                String country = record.get("Country");
+                System.out.println(country);
+            }
+        }
+    }
+
+    public void whoExportsCoffee() {
+        FileResource fr = new FileResource();
+        CSVParser parser= fr.getCSVParser();
+        listExporters(parser, "fish");
+        //Look for the country ur looking for in the country column
+        //go to right until you find the catagory you need
+        // you can go further and find 
+    }
+
+    public void TwoExportProducts(CSVParser parser, String export1, String export2){
+        FileResource fr = new FileResource();
+        parser = fr.getCSVParser();
+        double match = 0.0;
+        export1 = "fish";
+        export2 = "nuts";
+        for(CSVRecord record: parser){
+            String exports = record.get("Exports");
+            if(exports.contains(export1)){
+                match = match + 0.5;
+            }
+            if(exports.contains(export2)){
+                match = match + 0.5;
+            }
+            if(match==1.0){
+                String country = record.get("Country");
+                System.out.println(country);
+            }
+        }
+    }
+
+    public void tester(){
+        FileResource fr = new FileResource();   
+        CSVParser parser = fr.getCSVParser();
+        String info = countryInfo(parser, "Nauru");
+        System.out.println (info);
+        bigExporters (parser, "$999,999,999,999");
+        //int number = numberOfExporters(parser, "sugar");
+        //System.out.println(number);
+        //listExportersTwoProducts(parser, "gold", "diamonds");
+        //bigExporters(parser, "$999,999,999,999");
+    }
+
+    public String countryInfo(CSVParser parser, String country){
+        //for each row in the csv file
+        for (CSVRecord record : parser) {
+            //look at the countries column
+            String countries = record.get("Country");
+            //if the country is found
+            if (countries.contains(country)) {
+                String exports = record.get("Exports");
+                String value = record.get("Value (dollars)");
+                String countryInformation = country + ": " + exports + ": " +
+                    value;
+                //return a string with the established variable concatenated together
+                return countryInformation;
+            }
+        }
+        String noneFound = "NOT FOUND";
+
+        return noneFound;
+    }
+
+    public void listExportersTwoProducts(CSVParser parser, String exportItem1, String exportItem2) {
+        for (CSVRecord record : parser) {
+            String country = record.get("Country");
+            String exports = record.get("Exports");
+            if (exports.contains(exportItem1) && exports.contains(exportItem2)) {
+                System.out.println("The country " + country + " exports the two items that you entered.");
+            }
+        }
+    }
+
+    public int numberOfExporters(CSVParser parser, String exportItem) {
+        int count = 0;
+        for (CSVRecord record: parser) {
+            String exports = record.get("Exports");
+            if (exports.contains(exportItem)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void bigExporters(CSVParser parser, String valueInDollarFormat){
+        for (CSVRecord record: parser) {
+            String value = record.get("Value (dollars)");
+            if (value.length() > valueInDollarFormat.length()) {
+                String country = record.get("Country");
+                System.out.print(country + " ");
+                System.out.println(value);
+            }
+        }
+    }
+}
